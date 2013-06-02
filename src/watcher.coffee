@@ -7,7 +7,6 @@ try
   debug = require('debug') 'watch:watcher'
 catch err
   debug = ->
-debug = ->
 
 class Watcher extends events.EventEmitter
   @types: ['File', 'Directory', 'SymbolicLink']
