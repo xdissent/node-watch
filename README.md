@@ -37,6 +37,10 @@ This module **currently** does not differentiate event like `rename` or `delete`
 
 `maxSymLevel`: The max number of following symbolic links, in order to prevent circular links (defaults to **1**). 
 
+`minInterval`: The minimum amount of time to wait for multiple file system events. If another event arrives within this time period, the interval is reset. If no more events occur after `minInterval`, the listeners are notified of all changes that have occurred (defaults to **200**).
+
+`maxInterval`: The maximum amount of time to wait before listeners are notified of changes. If a number of events occur in succession, resetting the `minInterval` indefinitely, the listeners will be notified after `maxInterval` even if the file system continues sending events (defaults to **1000**).
+
 
 ```js
 watch('somedir', { recursive: false, followSymLinks: true }, function(filename) {
