@@ -4,14 +4,16 @@ tmp = require 'tmp'
 watch = require '../index'
 
 describe 'watch', ->
+  @timeout 5000
 
   tmpDir = null
   timeout = null
   options =  maxInterval: 600
 
   mkfile = (name, callback) ->
-    fs.writeFile path.join(tmpDir, name), 'teeseting', (err) ->
-      setTimeout callback, timeout if callback? and !err?
+    filename = path.join tmpDir, name
+    fs.writeFile filename, 'testing', (err) ->
+      setTimeout callback, timeout, filename if callback? and !err?
 
   beforeEach (done) ->
     timeout = 1
@@ -19,6 +21,64 @@ describe 'watch', ->
       return done err if err?
       tmpDir = dir
       done()
+
+  it 'should not throw an exception when called without a callback', ->
+    watch tmpDir, options
+
+  it 'should not throw an exception when called without a callback or options', ->
+    watch tmpDir
+
+  it 'should throw an exception when called without a filename', ->
+    watch.should.throw()
+
+  it 'should throw an exception when called with an empty array', ->
+    (-> watch []).should.throw()
+
+  it 'should watch a single file', (done) ->
+    changes = 0
+    mkfile 'test', (filename) ->
+      setTimeout ->
+        watcher = watch filename, options, (filename) -> changes++
+
+        fs.appendFile filename, 'test', (err) ->
+          return done err if err?
+          setTimeout ->
+            changes.should.be.equal 1
+            
+            fs.appendFile filename, 'test', (err) ->
+              return done err if err?
+
+              setTimeout ->
+                changes.should.be.equal 2
+                watcher.close()
+                done()
+              , watcher.options.minInterval * 2
+          , watcher.options.minInterval * 2
+      , 100
+
+  it 'should watch an array of files', (done) ->
+    changes = 0
+    mkfile 'test1', (file1) ->
+      mkfile 'test2', (file2) ->
+        setTimeout ->
+          watcher = watch [file1, file2], options, (filename) -> changes++
+
+          fs.appendFile file1, 'test', (err) ->
+            return done err if err?
+
+            setTimeout ->
+              changes.should.be.equal 1
+              
+              fs.appendFile file2, 'test', (err) ->
+                return done err if err?
+                
+                setTimeout ->
+                  changes.should.be.equal 2
+                  watcher.close()
+                  done()
+                , watcher.options.minInterval * 2
+            , watcher.options.minInterval * 2
+        , 100
 
   it 'should batch change notifications by minInterval option', (done) ->
     changed = []

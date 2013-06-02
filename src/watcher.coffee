@@ -7,6 +7,7 @@ try
   debug = require('debug') 'watch:watcher'
 catch err
   debug = ->
+debug = ->
 
 class Watcher extends events.EventEmitter
   @types: ['File', 'Directory', 'SymbolicLink']
@@ -71,7 +72,7 @@ class Watcher extends events.EventEmitter
   _watchFileCallback: (watchFile) ->
     (evt, filename) =>
       debug "_watchFileCallback #{evt}, #{filename}"
-      @_changedCallback watchFile if fs.basename(watchFile) is filename
+      @_changedCallback watchFile if path.basename(watchFile) is filename
 
   _watchDirCallback: (parent) ->
     (evt, filename) =>
