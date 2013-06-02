@@ -25,7 +25,7 @@ class Watcher extends events.EventEmitter
     if typeof @options is 'function'
       @callback = @options
       @options = {}
-    @options[k] = v for k, v of @constructor.defaults when !@options[k]
+    @options[k] = v for k, v of @constructor.defaults when !@options[k]?
     debug "options: #{([k, v].join ': ' for k, v of @options).join ', '}"
 
     @callback ?= ->
