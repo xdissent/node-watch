@@ -1,0 +1,7 @@
+--require coffee-script
+--require ../../../test/support/env
+--require should
+--reporter spec
+--ui bdd
+--compilers coffee:coffee-script
+--check-leaks

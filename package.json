@@ -13,8 +13,14 @@
         "type": "git"
       , "url": "git://github.com/yuanchuan/node-watch.git"
     }
+  , "scripts": {
+      "prepublish": "coffee -cbo lib src"
+    }
   , "devDependencies": {
-        "mocha": "1.8.1"
+        "mocha": "1.10.0"
       , "tmp": "0.0.20"
+      , "coffee-script": "*"
+      , "should": "*"
+      , "debug": "*"
     }
 }
