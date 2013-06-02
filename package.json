@@ -4,7 +4,7 @@
   , "description": "fs.watch() wrapper of Nodejs "
   , "url": "https://github.com/yuanchuan/node-watch"
   , "author": "yuanchuan <yuanchuan23@gmail.com> (http://yuanchuan.name)"
-  , "main": "./lib/watch.js"
+  , "main": "./index.js"
   , "keywords": ["nodewatch", "watch", "watchfile"]
   , "bugs": {
       "url": "https://github.com/yuanchuan/node-watch/issues"
@@ -14,7 +14,8 @@
       , "url": "git://github.com/yuanchuan/node-watch.git"
     }
   , "scripts": {
-      "prepublish": "coffee -cbo lib src"
+        "prepublish": "coffee -cbo lib src"
+      , "test": "mocha"
     }
   , "devDependencies": {
         "mocha": "1.10.0"

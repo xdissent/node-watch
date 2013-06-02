@@ -1,7 +1,7 @@
 fs = require 'fs'
 path = require 'path'
 tmp = require 'tmp'
-watch = require '../src/watch'
+watch = require '../index'
 
 describe 'watch', ->
 
@@ -11,8 +11,7 @@ describe 'watch', ->
 
   mkfile = (name, callback) ->
     fs.writeFile path.join(tmpDir, name), 'teeseting', (err) ->
-      return done err if err?
-      setTimeout callback, timeout if callback?
+      setTimeout callback, timeout if callback? and !err?
 
   beforeEach (done) ->
     timeout = 1
