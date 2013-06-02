@@ -102,7 +102,7 @@ class Watcher extends events.EventEmitter
 
   _timeoutCallback: ->
       debug '_timeoutCallback'
-      @callback f for f in @_changed unless @closed
+      @callback f for f in @_changed when !@closed
       @_changed = []
       @_minTimeout = null
       @_maxTimeout = null
