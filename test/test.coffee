@@ -80,6 +80,40 @@ describe 'watch', ->
             , watcher.options.minInterval * 2
         , 100
 
+
+  it 'should watch a directory recursively', (done) ->
+    changes = 0
+    level1 = path.join tmpDir, 'level1'
+    level2 = path.join level1, 'level2'
+    level3 = path.join level2, 'level3'
+    level4 = path.join level3, 'level4'
+
+    fs.mkdir level1, (err) ->
+      return done err if err?
+      setTimeout ->
+        watcher = watch level1, options, (filename) -> changes++
+
+        fs.mkdir level2, (err) ->
+          return done err if err?
+
+          changes.should.be.equal 0
+
+          fs.mkdir level3, (err) ->
+            return done err if err?
+
+            changes.should.be.equal 0
+
+            setTimeout ->
+              fs.writeFile level4, 'testing', (err) ->
+                return done err if err?
+
+                setTimeout ->
+                  changes.should.be.equal 1
+                  done()
+                , watcher.options.maxInterval
+            , watcher.options.minInterval
+      , 100
+
   it 'should batch change notifications by minInterval option', (done) ->
     changed = []
     watcher = watch tmpDir, options, (filename) -> changed.push filename
